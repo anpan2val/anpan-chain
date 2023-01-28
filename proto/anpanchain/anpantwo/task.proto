@@ -1,0 +1,10 @@
+syntax = "proto3";
+package anpan2val.anpanchain.anpantwo;
+
+option go_package = "github.com/anpan2val/anpan-chain/x/anpantwo/types";
+
+message Task {
+  uint64 id = 1;
+  string name = 2; 
+  string creator = 3;
+}

@@ -1,7 +1,38 @@
 syntax = "proto3";
+
 package anpan2val.anpanchain.anpantwo;
+
+import "anpanchain/anpantwo/task.proto";
 
 option go_package = "github.com/anpan2val/anpan-chain/x/anpantwo/types";
 
 // Msg defines the Msg service.
-service Msg {}
+service Msg {
+  rpc CreateTask (MsgCreateTask) returns (MsgCreateTaskResponse);
+  rpc UpdateTask (MsgUpdateTask) returns (MsgUpdateTaskResponse);
+  rpc DeleteTask (MsgDeleteTask) returns (MsgDeleteTaskResponse);
+}
+message MsgCreateTask {
+  string creator = 1;
+  string name    = 2;
+}
+
+message MsgCreateTaskResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateTask {
+  string creator = 1;
+  uint64 id      = 2;
+  string name    = 3;
+}
+
+message MsgUpdateTaskResponse {}
+
+message MsgDeleteTask {
+  string creator = 1;
+  uint64 id      = 2;
+}
+
+message MsgDeleteTaskResponse {}
+

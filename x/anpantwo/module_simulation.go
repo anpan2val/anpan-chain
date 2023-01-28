@@ -24,7 +24,19 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgCreateTask = "op_weight_msg_task"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateTask int = 100
+
+	opWeightMsgUpdateTask = "op_weight_msg_task"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateTask int = 100
+
+	opWeightMsgDeleteTask = "op_weight_msg_task"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteTask int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -35,6 +47,17 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	anpantwoGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		TaskList: []types.Task{
+			{
+				Id:      0,
+				Creator: sample.AccAddress(),
+			},
+			{
+				Id:      1,
+				Creator: sample.AccAddress(),
+			},
+		},
+		TaskCount: 2,
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&anpantwoGenesis)
@@ -57,6 +80,39 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgCreateTask int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateTask, &weightMsgCreateTask, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateTask = defaultWeightMsgCreateTask
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateTask,
+		anpantwosimulation.SimulateMsgCreateTask(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateTask int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateTask, &weightMsgUpdateTask, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateTask = defaultWeightMsgUpdateTask
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateTask,
+		anpantwosimulation.SimulateMsgUpdateTask(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteTask int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteTask, &weightMsgDeleteTask, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteTask = defaultWeightMsgDeleteTask
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteTask,
+		anpantwosimulation.SimulateMsgDeleteTask(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
