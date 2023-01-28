@@ -45340,6 +45340,8 @@ paths:
       tags:
         - Query
 definitions:
+  anpan2val.anpanchain.anpanchain.MsgGreetingResponse:
+    type: object
   anpan2val.anpanchain.anpanchain.Params:
     type: object
     description: Params defines the parameters for the module.
