@@ -2,11 +2,16 @@ syntax = "proto3";
 
 package anpan2val.anpanchain.anpanchain;
 
+import "anpanchain/anpanchain/people.proto";
+
 option go_package = "github.com/anpan2val/anpan-chain/x/anpanchain/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc Greeting (MsgGreeting) returns (MsgGreetingResponse);
+  rpc Greeting     (MsgGreeting    ) returns (MsgGreetingResponse    );
+  rpc CreatePeople (MsgCreatePeople) returns (MsgCreatePeopleResponse);
+  rpc UpdatePeople (MsgUpdatePeople) returns (MsgUpdatePeopleResponse);
+  rpc DeletePeople (MsgDeletePeople) returns (MsgDeletePeopleResponse);
 }
 message MsgGreeting {
   string creator     = 1;
@@ -15,4 +20,30 @@ message MsgGreeting {
 }
 
 message MsgGreetingResponse {}
+
+message MsgCreatePeople {
+  string creator = 1;
+  string address = 2;
+  string name    = 3;
+}
+
+message MsgCreatePeopleResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdatePeople {
+  string creator = 1;
+  uint64 id      = 2;
+  string address = 3;
+  string name    = 4;
+}
+
+message MsgUpdatePeopleResponse {}
+
+message MsgDeletePeople {
+  string creator = 1;
+  uint64 id      = 2;
+}
+
+message MsgDeletePeopleResponse {}
 

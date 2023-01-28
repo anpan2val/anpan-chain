@@ -1,12 +1,17 @@
 syntax = "proto3";
+
 package anpan2val.anpanchain.anpanchain;
 
 import "gogoproto/gogo.proto";
 import "anpanchain/anpanchain/params.proto";
+import "anpanchain/anpanchain/people.proto";
 
 option go_package = "github.com/anpan2val/anpan-chain/x/anpanchain/types";
 
 // GenesisState defines the anpanchain module's genesis state.
 message GenesisState {
-  Params params = 1 [(gogoproto.nullable) = false];
+           Params params      = 1 [(gogoproto.nullable) = false];
+  repeated People peopleList  = 2 [(gogoproto.nullable) = false];
+           uint64 peopleCount = 3;
 }
+

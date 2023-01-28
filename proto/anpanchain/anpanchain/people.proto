@@ -1,0 +1,11 @@
+syntax = "proto3";
+package anpan2val.anpanchain.anpanchain;
+
+option go_package = "github.com/anpan2val/anpan-chain/x/anpanchain/types";
+
+message People {
+  uint64 id = 1;
+  string address = 2; 
+  string name = 3; 
+  string creator = 4;
+}

@@ -1,26 +1,58 @@
 syntax = "proto3";
+
 package anpan2val.anpanchain.anpanchain;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "anpanchain/anpanchain/params.proto";
+import "anpanchain/anpanchain/people.proto";
 
 option go_package = "github.com/anpan2val/anpan-chain/x/anpanchain/types";
 
 // Query defines the gRPC querier service.
 service Query {
+  
   // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+  rpc Params (QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/anpan2val/anpan-chain/anpanchain/params";
+  
+  }
+  
+  // Queries a list of People items.
+  rpc People    (QueryGetPeopleRequest) returns (QueryGetPeopleResponse) {
+    option (google.api.http).get = "/anpan2val/anpan-chain/anpanchain/people/{id}";
+  
+  }
+  rpc PeopleAll (QueryAllPeopleRequest) returns (QueryAllPeopleResponse) {
+    option (google.api.http).get = "/anpan2val/anpan-chain/anpanchain/people";
+  
   }
 }
-
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
+  
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
 }
+
+message QueryGetPeopleRequest {
+  uint64 id = 1;
+}
+
+message QueryGetPeopleResponse {
+  People People = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllPeopleRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPeopleResponse {
+  repeated People                                 People     = 1 [(gogoproto.nullable) = false];
+           cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
