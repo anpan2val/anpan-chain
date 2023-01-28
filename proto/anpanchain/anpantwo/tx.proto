@@ -1,0 +1,7 @@
+syntax = "proto3";
+package anpan2val.anpanchain.anpantwo;
+
+option go_package = "github.com/anpan2val/anpan-chain/x/anpantwo/types";
+
+// Msg defines the Msg service.
+service Msg {}

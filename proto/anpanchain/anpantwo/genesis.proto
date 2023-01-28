@@ -1,0 +1,12 @@
+syntax = "proto3";
+package anpan2val.anpanchain.anpantwo;
+
+import "gogoproto/gogo.proto";
+import "anpanchain/anpantwo/params.proto";
+
+option go_package = "github.com/anpan2val/anpan-chain/x/anpantwo/types";
+
+// GenesisState defines the anpantwo module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

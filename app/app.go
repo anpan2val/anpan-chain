@@ -106,6 +106,9 @@ import (
 	anpanchainmodule "github.com/anpan2val/anpan-chain/x/anpanchain"
 	anpanchainmodulekeeper "github.com/anpan2val/anpan-chain/x/anpanchain/keeper"
 	anpanchainmoduletypes "github.com/anpan2val/anpan-chain/x/anpanchain/types"
+	anpantwomodule "github.com/anpan2val/anpan-chain/x/anpantwo"
+	anpantwomodulekeeper "github.com/anpan2val/anpan-chain/x/anpantwo/keeper"
+	anpantwomoduletypes "github.com/anpan2val/anpan-chain/x/anpantwo/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	appparams "github.com/anpan2val/anpan-chain/app/params"
@@ -165,6 +168,7 @@ var (
 		ica.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		anpanchainmodule.AppModuleBasic{},
+		anpantwomodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -239,6 +243,8 @@ type App struct {
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
 	AnpanchainKeeper anpanchainmodulekeeper.Keeper
+
+	AnpantwoKeeper anpantwomodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -284,6 +290,7 @@ func New(
 		ibctransfertypes.StoreKey, icahosttypes.StoreKey, capabilitytypes.StoreKey, group.StoreKey,
 		icacontrollertypes.StoreKey,
 		anpanchainmoduletypes.StoreKey,
+		anpantwomoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -503,6 +510,14 @@ func New(
 	)
 	anpanchainModule := anpanchainmodule.NewAppModule(appCodec, app.AnpanchainKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.AnpantwoKeeper = *anpantwomodulekeeper.NewKeeper(
+		appCodec,
+		keys[anpantwomoduletypes.StoreKey],
+		keys[anpantwomoduletypes.MemStoreKey],
+		app.GetSubspace(anpantwomoduletypes.ModuleName),
+	)
+	anpantwoModule := anpantwomodule.NewAppModule(appCodec, app.AnpantwoKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	/**** IBC Routing ****/
@@ -569,6 +584,7 @@ func New(
 		transferModule,
 		icaModule,
 		anpanchainModule,
+		anpantwoModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -599,6 +615,7 @@ func New(
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		anpanchainmoduletypes.ModuleName,
+		anpantwomoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -624,6 +641,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		anpanchainmoduletypes.ModuleName,
+		anpantwomoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -654,6 +672,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		anpanchainmoduletypes.ModuleName,
+		anpantwomoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -684,6 +703,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		anpanchainModule,
+		anpantwoModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -889,6 +909,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(anpanchainmoduletypes.ModuleName)
+	paramsKeeper.Subspace(anpantwomoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
